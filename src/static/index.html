@@ -12,16 +12,38 @@
       <h2>Extracurricular Activities</h2>
     </header>
 
-    <main>
-      <section id="activities-container">
-        <h3>Available Activities</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Loading activities...</p>
-        </div>
+    <main style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+      <section id="left-panel" style="flex: 2 1 350px; min-width: 320px; max-width: 600px;">
+        <section id="toolbar-container">
+          <h3>Filter &amp; Search</h3>
+          <form id="filter-form">
+            <label for="category">Category:</label>
+            <select id="category">
+              <option value="">All</option>
+              <option value="Academic">Academic</option>
+              <option value="Sports">Sports</option>
+              <option value="Arts">Arts</option>
+            </select>
+            <label for="sort">Sort by:</label>
+            <select id="sort">
+              <option value="">None</option>
+              <option value="name">Name</option>
+              <option value="time">Time</option>
+            </select>
+            <label for="search">Search:</label>
+            <input type="text" id="search" placeholder="Search activities..." />
+            <button type="submit">Apply</button>
+          </form>
+        </section>
+        <section id="activities-container">
+          <h3>Available Activities</h3>
+          <div id="activities-list">
+            <!-- Activities will be loaded here -->
+            <p>Loading activities...</p>
+          </div>
+        </section>
       </section>
-
-      <section id="signup-container">
+      <section id="signup-container" style="flex: 1 1 300px; min-width: 280px; max-width: 400px;">
         <h3>Sign Up for an Activity</h3>
         <form id="signup-form">
           <div class="form-group">

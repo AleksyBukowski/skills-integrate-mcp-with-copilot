@@ -3,18 +3,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  const filterForm = document.getElementById("filter-form");
+  const categorySelect = document.getElementById("category");
+  const sortSelect = document.getElementById("sort");
+  const searchInput = document.getElementById("search");
 
-  // Function to fetch activities from API
+  // Function to fetch activities from API with filters
   async function fetchActivities() {
+    let url = "/activities";
+    const params = [];
+    if (categorySelect && categorySelect.value)
+      params.push(`category=${encodeURIComponent(categorySelect.value)}`);
+    if (sortSelect && sortSelect.value)
+      params.push(`sort=${encodeURIComponent(sortSelect.value)}`);
+    if (searchInput && searchInput.value)
+      params.push(`search=${encodeURIComponent(searchInput.value)}`);
+    if (params.length > 0) url += `?${params.join("&")}`;
     try {
-      const response = await fetch("/activities");
+      const response = await fetch(url);
       const activities = await response.json();
+      // If the backend returns an array, convert to object
+      const activitiesObj = Array.isArray(activities)
+        ? Object.fromEntries(activities.map((a) => [a.name, a]))
+        : activities;
 
       // Clear loading message
       activitiesList.innerHTML = "";
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
 
       // Populate activities list
-      Object.entries(activities).forEach(([name, details]) => {
+      Object.entries(activitiesObj).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
@@ -39,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
+          <p><strong>Category:</strong> ${details.category || "N/A"}</p>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
@@ -154,6 +173,14 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error signing up:", error);
     }
   });
+
+  // Handle filter form submit
+  if (filterForm) {
+    filterForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      fetchActivities();
+    });
+  }
 
   // Initialize app
   fetchActivities();
